@@ -1,0 +1,154 @@
+/* No external font CDN - avoids render-blocking on slow TV networks */
+:root {
+    --bg-color: #060810;
+    --text-color: #f0f4ff;
+    --text-muted: rgba(200, 215, 240, 0.65);
+    --focus-color: #ffffff;
+    --focus-ring: rgba(255, 255, 255, 0.9);
+    --focus-glow: rgba(255, 255, 255, 0.2);
+    --card-bg: #131720;
+    --card-bg-hover: #1c2230;
+    --surface: rgba(255, 255, 255, 0.06);
+    --surface-border: rgba(255, 255, 255, 0.1);
+    --accent: #e63c26;
+    --accent-soft: rgba(230, 60, 38, 0.18);
+    --sidebar-bg: rgba(4, 6, 12, 0.97);
+    --radius-card: 16px;
+    --radius-btn: 999px;
+    --transition-fast: 120ms ease;
+    --transition-mid: 180ms ease;
+    /* TV-optimized font stack: prefers system fonts (no download needed) */
+    --font-main: "LG Display", "LG Smart TV", "Meiryo", "Helvetica Neue", Arial, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow: hidden;
+    /* GPU-accelerated text rendering */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeSpeed;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.screen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+}
+
+.row {
+    margin: 40px;
+}
+
+.card {
+    display: inline-block;
+    width: 250px;
+    height: 140px;
+    margin-right: 20px;
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card.focused {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 3px var(--focus-ring), 0 8px 32px rgba(0,0,0,0.5);
+}
+
+*:focus {
+    outline: none !important;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.screen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+}
+
+.row {
+    margin: 40px;
+}
+
+.card {
+    display: inline-block;
+    width: 250px;
+    height: 140px;
+    margin-right: 20px;
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card.focused {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 3px var(--focus-ring), 0 8px 32px rgba(0,0,0,0.5);
+}
+
+*:focus {
+    outline: none !important;
+}
+
+/* =============================================
+   PERFORMANCE: GPU compositing hints
+   Forces elements onto their own GPU layer
+   so focus transitions don't cause repaints
+   ============================================= */
+
+/* Promote cards and interactive items to GPU layer */
+.home-content-card,
+.home-progress-card,
+.home-hero-card,
+.search-result-card,
+.discover-card,
+.home-nav-item,
+.focusable {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Sidebar transition: only animate width/transform, not layout */
+.home-sidebar {
+    backface-visibility: hidden;
+}
+
+/* Images: prevent repaints by promoting to own layer */
+.content-poster,
+.featured-backdrop,
+.home-progress-poster,
+.search-result-poster {
+    will-change: opacity;
+    transform: translateZ(0);
+}
+
+/* Scroll containers: enable GPU-accelerated scroll */
+.home-main,
+.home-track,
+.search-content,
+.search-results-track,
+.settings-panel,
+.library-main {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto; /* NO smooth scroll - too slow on webOS */
+}
+
+/* Animations: use transform/opacity only (GPU-composited properties) */
+/* NEVER animate: width, height, top, left, margin, padding, border-radius on hot paths */
